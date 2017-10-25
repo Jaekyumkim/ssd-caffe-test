@@ -87,6 +87,12 @@ const Dtype* Blob<Dtype>::cpu_data() const {
 }
 
 template <typename Dtype>
+Dtype* Blob<Dtype>::cpu_data_noneconst() {
+  CHECK(data_);
+  return (Dtype*)data_->cpu_data();
+}
+
+template <typename Dtype>
 void Blob<Dtype>::set_cpu_data(Dtype* data) {
   CHECK(data);
   data_->set_cpu_data(data);
@@ -96,6 +102,12 @@ template <typename Dtype>
 const Dtype* Blob<Dtype>::gpu_data() const {
   CHECK(data_);
   return (const Dtype*)data_->gpu_data();
+}
+
+template <typename Dtype>
+Dtype* Blob<Dtype>::gpu_data_noneconst() {
+  CHECK(data_);
+  return (Dtype*)data_->gpu_data();
 }
 
 template <typename Dtype>

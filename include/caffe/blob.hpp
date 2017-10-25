@@ -215,6 +215,9 @@ class Blob {
     CHECK(diff_);
     return diff_;
   }
+  
+  Dtype* cpu_data_noneconst() ;
+  Dtype* gpu_data_noneconst() ;
 
   const Dtype* cpu_data() const;
   void set_cpu_data(Dtype* data);

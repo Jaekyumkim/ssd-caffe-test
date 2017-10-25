@@ -30,14 +30,14 @@ void ConvolutionScalingLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bot
 //    Dtype* bottom_data2 = bottom_data;
     Dtype* top_data = top[i]->mutable_cpu_data();
     for (int n = 0; n < this->num_; ++n) {
-      for (int k = 0; k < this->bottom_dim_; ++k) {
+      for (int k = 0; k < this->bottom_dim_; k+=9) {
         Dtype sum = 0;
         for (int h = 0; h < 9; ++h) {
           if(bottom_data[k+h]==-122) sum++;
         }
         for (int h = 0; h < 9; ++h) {
           if (sum==0) sum=1;
-          bottom_data[k+h]/=sum;
+          bottom_data[k+h] = bottom_data[k+h] / sum * 9;
         }
       }
       this->forward_cpu_gemm(bottom_data + n * this->bottom_dim_, weight,

@@ -613,7 +613,7 @@ void RandomSaturation(const cv::Mat& in_img, cv::Mat* out_img,
 void AdjustSaturation(const cv::Mat& in_img, const float delta,
                       cv::Mat* out_img) {
   if (fabs(delta - 1.f) != 1e-3) {
-  if (in_img.channels() == 4) {
+  if (in_img.channels() == 4 or in_img.channels() == 6) {
   vector<cv::Mat> channels4;
   cv::split(in_img, channels4);
   cv::cvtColor(in_img, *out_img, CV_BGRA2BGR);
@@ -631,8 +631,15 @@ void AdjustSaturation(const cv::Mat& in_img, const float delta,
   cvtColor(*out_img, *out_img, CV_HSV2BGR);
   vector<cv::Mat> channels_BGR;
   cv::split(*out_img, channels_BGR);
+  if (in_img.channels() == 4) {
   channels_BGR.push_back(channels4[3]);
+  }
+  else{
+    channels_BGR.push_back(channels4[3]);
+    channels_BGR.push_back(channels4[4]);
+    channels_BGR.push_back(channels4[5]);  }
   cv::merge(channels_BGR, *out_img);
+
   } else {
     // Convert to HSV colorspae.
     cv::cvtColor(in_img, *out_img, CV_BGR2HSV);
@@ -670,7 +677,7 @@ void RandomHue(const cv::Mat& in_img, cv::Mat* out_img,
 void AdjustHue(const cv::Mat& in_img, const float delta, cv::Mat* out_img) {
   if (fabs(delta) > 0) {
     // Convert to HSV colorspae.
-  if (in_img.channels() == 4) {
+  if (in_img.channels() == 4 or in_img.channels() == 6) {
   vector<cv::Mat> channels4;
   cv::split(in_img, channels4);
   cv::cvtColor(in_img, *out_img, CV_BGRA2BGR);
@@ -688,9 +695,16 @@ void AdjustHue(const cv::Mat& in_img, const float delta, cv::Mat* out_img) {
   cvtColor(*out_img, *out_img, CV_HSV2BGR);
   vector<cv::Mat> channels_BGR;
   cv::split(*out_img, channels_BGR);
+  if (in_img.channels() == 4) {
   channels_BGR.push_back(channels4[3]);
+  }
+  else{
+    channels_BGR.push_back(channels4[3]);
+    channels_BGR.push_back(channels4[4]);
+    channels_BGR.push_back(channels4[5]);
+  }
   cv::merge(channels_BGR, *out_img);
-  } else {
+  }  else {
     // Convert to HSV colorspae.
     cv::cvtColor(in_img, *out_img, CV_BGR2HSV);
 

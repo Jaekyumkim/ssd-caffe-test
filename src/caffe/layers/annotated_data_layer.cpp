@@ -76,6 +76,9 @@ void AnnotatedDataLayer<Dtype>::DataLayerSetUp(
   // Use data_transformer to infer the expected blob shape from anno_datum.
   vector<int> top_shape =
       this->data_transformer_->InferBlobShape(anno_datum.datum());
+  vector<int> tmp_shape = 
+      this->data_transformer_->InferBlobShape(anno_datum.datum2());
+  top_shape[1] = top_shape[1] + tmp_shape[1];
   this->transformed_data_.Reshape(top_shape);
   // Reshape top[0] and prefetch_data according to the batch_size.
   top_shape[0] = batch_size;
@@ -140,6 +143,7 @@ void AnnotatedDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
   double trans_time = 0;
   CPUTimer timer;
   CHECK(batch->data_.count());
+
   CHECK(this->transformed_data_.count());
 
   // Reshape according to the first anno_datum of each batch
@@ -153,11 +157,13 @@ void AnnotatedDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
   // Use data_transformer to infer the expected blob shape from anno_datum.
   vector<int> top_shape =
       this->data_transformer_->InferBlobShape(anno_datum.datum());
+  vector<int> tmp_shape = 
+      this->data_transformer_->InferBlobShape(anno_datum.datum2());
+  top_shape[1] = top_shape[1] + tmp_shape[1];
   this->transformed_data_.Reshape(top_shape);
   // Reshape batch according to the batch_size.
   top_shape[0] = batch_size;
   batch->data_.Reshape(top_shape);
-
   Dtype* top_data = batch->data_.mutable_cpu_data();
   Dtype* top_label = NULL;  // suppress warnings about uninitialized variables
   if (this->output_labels_ && !has_anno_type_) {
@@ -184,6 +190,8 @@ void AnnotatedDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
       distort_datum.CopyFrom(anno_datum);
       this->data_transformer_->DistortImage(anno_datum.datum(),
                                             distort_datum.mutable_datum());
+      this->data_transformer_->DistortImage(anno_datum.datum2(),
+                                            distort_datum.mutable_datum2());
       if (transform_param.has_expand_param()) {
         expand_datum = new AnnotatedDatum();
         this->data_transformer_->ExpandImage(distort_datum, expand_datum);
@@ -226,6 +234,9 @@ void AnnotatedDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
   cv_img = cv::imdecode(vec_data, -1);
     vector<int> shape =
         this->data_transformer_->InferBlobShape(sampled_datum->datum());
+    vector<int> tmp_shape = 
+        this->data_transformer_->InferBlobShape(sampled_datum->datum2());
+    shape[1] = shape[1] + tmp_shape[1];
     if (transform_param.has_resize_param()) {
       if (transform_param.resize_param().resize_mode() ==
           ResizeParameter_Resize_mode_FIT_SMALL_SIZE) {
@@ -256,6 +267,12 @@ void AnnotatedDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
         }
         // Transform datum and annotation_group at the same time
         transformed_anno_vec.clear();
+        ///////////
+        cv::Mat tmp_img = DecodeDatumToCVMatNative(sampled_datum->datum());
+        cv::imwrite("tmp.png", tmp_img);
+        cv::Mat tmp_img2 = DecodeDatumToCVMatNative(sampled_datum->datum2());
+        cv::imwrite("tmp2.png", tmp_img2);
+
         this->data_transformer_->Transform(*sampled_datum,
                                            &(this->transformed_data_),
                                            &transformed_anno_vec);
@@ -271,6 +288,8 @@ void AnnotatedDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
       } else {
         this->data_transformer_->Transform(sampled_datum->datum(),
                                            &(this->transformed_data_));
+        this->data_transformer_->Transform(sampled_datum->datum2(),
+                                           &(this->transformed_data_));
         // Otherwise, store the label from datum.
         CHECK(sampled_datum->datum().has_label()) << "Cannot find any label.";
         top_label[item_id] = sampled_datum->datum().label();
@@ -278,7 +297,15 @@ void AnnotatedDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
     } else {
       this->data_transformer_->Transform(sampled_datum->datum(),
                                          &(this->transformed_data_));
+      this->data_transformer_->Transform(sampled_datum->datum2(),
+                                         &(this->transformed_data_));
     }
+//    const Dtype* tmp_data = this->transformed_data_.cpu_data();
+//    cv::Mat tmp_img;
+//    for tmp
+//    cv::imwrite("tmp.png", tmp_data);
+//    cv::Mat tmp_img2 = DecodeDatumToCVMatNative();
+//    cv::imwrite("tmp2.png", tmp_img2);
     // clear memory
     if (has_sampled) {
       delete sampled_datum;

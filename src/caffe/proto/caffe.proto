@@ -152,6 +152,7 @@ message AnnotatedDatum {
   optional AnnotationType type = 2;
   // Each group contains annotation for a particular class.
   repeated AnnotationGroup annotation_group = 3;
+  optional Datum datum2 = 4;
 }
 
 message FillerParameter {

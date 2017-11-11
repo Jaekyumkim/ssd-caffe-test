@@ -39,6 +39,7 @@ class DataTransformer {
    *    This is destination blob. It can be part of top blob's data if
    *    set_cpu_data() is used. See data_layer.cpp for an example.
    */
+  void Transform(const Datum& datum, const Datum& datum2, Blob<Dtype>* transformed_blob);
   void Transform(const Datum& datum, Blob<Dtype>* transformed_blob);
 
   /**
@@ -118,6 +119,8 @@ class DataTransformer {
    */
   void ExpandImage(const Datum& datum, const float expand_ratio,
                    NormalizedBBox* expand_bbox, Datum* expanded_datum);
+  void ExpandImage(const Datum& datum, const Datum& datum2, const float expand_ratio,
+                   NormalizedBBox* expand_bbox, Datum* expanded_datum, Datum* expanded_datum2);
 
   /**
    * @brief Expand the datum and adjust AnnotationGroup.
@@ -154,8 +157,11 @@ class DataTransformer {
    *    This is destination blob. It can be part of top blob's data if
    *    set_cpu_data() is used. See image_data_layer.cpp for an example.
    */
+  void Transform(const cv::Mat& cv_img, const cv::Mat& cv_img2, Blob<Dtype>* transformed_blob,
+                 NormalizedBBox* crop_bbox, bool* do_mirror);
   void Transform(const cv::Mat& cv_img, Blob<Dtype>* transformed_blob,
                  NormalizedBBox* crop_bbox, bool* do_mirror);
+  void Transform(const cv::Mat& cv_img, const cv::Mat& cv_img2, Blob<Dtype>* transformed_blob);
   void Transform(const cv::Mat& cv_img, Blob<Dtype>* transformed_blob);
 
   /**
@@ -169,6 +175,8 @@ class DataTransformer {
    */
   void ExpandImage(const cv::Mat& img, const float expand_ratio,
                    NormalizedBBox* expand_bbox, cv::Mat* expand_img);
+  void ExpandImage(const cv::Mat& img, const cv::Mat& img2, const float expand_ratio,
+                   NormalizedBBox* expand_bbox, cv::Mat* expand_img, cv::Mat* expand_img2);
 
   void TransformInv(const Blob<Dtype>* blob, vector<cv::Mat>* cv_imgs);
   void TransformInv(const Dtype* data, cv::Mat* cv_img, const int height,
@@ -237,17 +245,21 @@ class DataTransformer {
   virtual int Rand(int n);
 
   // Transform and return the transformation information.
+  void Transform(const Datum& datum, const Datum& datum2, Dtype* transformed_data,
+                 NormalizedBBox* crop_bbox, bool* do_mirror);
   void Transform(const Datum& datum, Dtype* transformed_data,
                  NormalizedBBox* crop_bbox, bool* do_mirror);
+  void Transform(const Datum& datum, const Datum& datum2, Dtype* transformed_data);
   void Transform(const Datum& datum, Dtype* transformed_data);
 
   /**
    * @brief Applies the transformation defined in the data layer's
    * transform_param block to the data and return transform information.
    */
+  void Transform(const Datum& datum, const Datum& datum2, Blob<Dtype>* transformed_blob,
+                 NormalizedBBox* crop_bbox, bool* do_mirror);
   void Transform(const Datum& datum, Blob<Dtype>* transformed_blob,
                  NormalizedBBox* crop_bbox, bool* do_mirror);
-
   // Tranformation parameters
   TransformationParameter param_;
 

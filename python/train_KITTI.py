@@ -27,10 +27,23 @@ while solver.iter < max_iter:
   label=solver.net.blobs['label'].data
 #  data1=solver.net.blobs['data1'].data
 #  data2=solver.net.blobs['data_dhi'].data
+#  pdb.set_trace()
   for num_idx in range(2):
     img = data[num_idx,:,:,:].transpose((1,2,0)).astype(np.uint8)
-    cv2.imwrite(save_path+'%06d.png'%(num_idx),img[:,:,0:3])
-    cv2.imwrite(save_path+'depth_%06d.png'%(num_idx),img[:,:,3:6])
+    rgb = img[:,:,0:3]
+    dhi = img[:,:,3:6]
+#    cv2.imwrite(save_path+'%06d.png'%(num_idx),img[:,:,0:3])
+#    cv2.imwrite(save_path+'depth_%06d.png'%(num_idx),img[:,:,3:6])
+    x_min = (label[0,0,0,:][3]*data.shape[3]).astype(np.int32)
+    y_min = (label[0,0,0,:][4]*data.shape[2]).astype(np.int32)
+    x_max = (label[0,0,0,:][5]*data.shape[3]).astype(np.int32)
+    y_max = (label[0,0,0,:][6]*data.shape[2]).astype(np.int32)
+    cv2.imwrite(save_path+'%06d.png'%(num_idx),rgb)
+    pdb.set_trace()
+    #cv2.rectangle(rgb, (xmin, ymin), (xmax, ymax), (0, 0, 255), 2)
+    #cv2.rectangle(rgb, (x_min, y_min), (x_max,y_max), (0, 0, 255), 2)
+    cv2.imwrite(save_path+'%06d.png'%(num_idx),rgb)
+
 #  for num_idx in range(4):
 #    img = data1[num_idx,:,:,:].transpose((1,2,0)).astype(np.uint8)
 #    cv2.imwrite(save_path+'%06d.png'%(num_idx+4),img)

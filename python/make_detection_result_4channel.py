@@ -17,10 +17,10 @@ s_idx = 6000
 f_idx = 7481
 
 base_dir = '/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/'
-txt_dir = (base_dir + 'SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/result_00001_2028_115000_big_stand_aug_realpre/Car/')
+txt_dir = (base_dir + 'SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/result_00001_2028_140000_big_stand_aug_realpre/Car/')
 caffe.set_mode_gpu()
 caffe.set_device(1)
-net = caffe.Net('/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/deploy.prototxt', '/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/VGG_KITTI_SSD_600x150_00001_2028_360000_realpre_iter_115000.caffemodel', caffe.TEST)
+net = caffe.Net('/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/deploy.prototxt', '/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/VGG_KITTI_SSD_600x150_00001_2028_360000_realpre_iter_140000.caffemodel', caffe.TEST)
 labels = ["background", "Car", "Pedestrian", "Cyclist", "Van", "Truck", "Person_sitting", "Tram", "Misc"]
 if not(os.path.exists(txt_dir)):
   os.makedirs(txt_dir)

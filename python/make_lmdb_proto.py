@@ -44,7 +44,6 @@ def write(images, image_dhi, labels = []):
             veh_group = caffe.proto.caffe_pb2.AnnotationGroup()
             ped_group = caffe.proto.caffe_pb2.AnnotationGroup()
             cyc_group = caffe.proto.caffe_pb2.AnnotationGroup()
-            datum.annotation_group.extend([veh_group,ped_group,cyc_group])
             veh_group.group_label = 1
             ped_group.group_label = 2
             cyc_group.group_label = 3
@@ -61,6 +60,7 @@ def write(images, image_dhi, labels = []):
                     ped_group.annotation.extend([anno])
                 else:
                     cyc_group.annotation.extend([anno])
+            datum.annotation_group.extend([veh_group,ped_group,cyc_group])
 #            pdb.set_trace()
             assert images[i].dtype == np.uint8 or images[i].dtype == np.float, "currently only numpy.uint8 and numpy.float images are supported"
                     
@@ -89,8 +89,9 @@ data_path = '/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/data/KIT
 img_total = []
 img_dhi_total = []
 start = time.time()
-idx = range(10); random.shuffle(idx)
-for i in range(10):
+idx = range(6000); random.shuffle(idx)
+#pdb.set_trace()
+for i in range(6000):
     i = idx[i]
     rgb_img = (cv2.imread(data_path + '%06d' % (i) + '.png')).astype(np.uint8)
     dhi_img = Image.open(data_path + '../../sparse_dhi/' + '%06d.png'%(i))
@@ -105,7 +106,8 @@ for i in range(10):
 label_total = []
 patten = '(\w*) .* .* .* ([-\d]*.\d*) ([-\d]*.\d*) ([-\d]*.\d*) ([-\d]*.\d*) .* .* .* .* .* .* .*'
 r = re.compile(patten)
-for i in range(10):
+for i in range(6000):
+    i = idx[i]
     label_group = []
     fi = open(data_path + '../../label_2_3cls/train/' + '%06d.txt'%(i))
     while True:

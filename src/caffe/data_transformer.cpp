@@ -365,9 +365,9 @@ void DataTransformer<Dtype>::Transform(const Datum& datum,
       cv_img = DecodeDatumToCVMatNative(datum);
       cv_img2 = DecodeDatumToCVMatNative(datum2);
     }
-  cv::imwrite("./368tmp.png", cv_img);
+//  cv::imwrite("./368tmp.png", cv_img);
 
-  cv::imwrite("./370tmp2.png", cv_img2);
+//  cv::imwrite("./370tmp2.png", cv_img2);
     // Transform the cv::image into blob.
     return Transform(cv_img, cv_img2, transformed_blob, crop_bbox, do_mirror);
 #else
@@ -1107,15 +1107,15 @@ void DataTransformer<Dtype>::Transform(const cv::Mat& cv_img,
     CHECK_EQ(cv_cropped_image.cols, data_mean_.width());
   }
   CHECK(cv_cropped_image.data);
-  cv::imwrite("./tmp.png", cv_cropped_image);
+//  cv::imwrite("./tmp.png", cv_cropped_image);
 
-  cv::imwrite("./tmp2.png", cv_cropped_image2);
-  cv::imwrite("./cv_img.png", cv_img);
+//  cv::imwrite("./tmp2.png", cv_cropped_image2);
+//  cv::imwrite("./cv_img.png", cv_img);
 
-  cv::imwrite("./cv_img2.png", cv_img2);  
-  cv::imwrite("./tmp.png", cv_cropped_image);
+//  cv::imwrite("./cv_img2.png", cv_img2);  
+//  cv::imwrite("./tmp.png", cv_cropped_image);
 
-  cv::imwrite("./tmp2.png", cv_cropped_image2);
+//  cv::imwrite("./tmp2.png", cv_cropped_image2);
   Dtype* transformed_data = transformed_blob->mutable_cpu_data();
   int top_index;
   for (int h = 0; h < height; ++h) {

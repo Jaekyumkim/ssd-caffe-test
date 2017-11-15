@@ -268,10 +268,10 @@ void AnnotatedDataLayer<Dtype>::load_batch(Batch<Dtype>* batch) {
         // Transform datum and annotation_group at the same time
         transformed_anno_vec.clear();
         ///////////
-        cv::Mat tmp_img = DecodeDatumToCVMatNative(sampled_datum->datum());
-        cv::imwrite("tmp.png", tmp_img);
-        cv::Mat tmp_img2 = DecodeDatumToCVMatNative(sampled_datum->datum2());
-        cv::imwrite("tmp2.png", tmp_img2);
+//        cv::Mat tmp_img = DecodeDatumToCVMatNative(sampled_datum->datum());
+//        cv::imwrite("tmp.png", tmp_img);
+//        cv::Mat tmp_img2 = DecodeDatumToCVMatNative(sampled_datum->datum2());
+//        cv::imwrite("tmp2.png", tmp_img2);
 
         this->data_transformer_->Transform(*sampled_datum,
                                            &(this->transformed_data_),

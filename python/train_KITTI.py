@@ -9,7 +9,7 @@ caffe.set_mode_gpu()
 caffe.set_device(1)
 #pdb.set_trace()
 save_path = ('/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/ssd-caffe-test/python/test_img/')
-solver = caffe.get_solver('/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/ssd-caffe-test/data/KITTI/test/solver.prototxt')
+solver = caffe.get_solver('/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/ssd-caffe-test/data/KITTI/6channel_sparse_fusion/solver.prototxt')
 #solver.net.copy_from('/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/models/VGGNet/VGG_ILSVRC_16_layers_fc_reduced.caffemodel')
 #solver.net.copy_from('/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/data/KITTI/4channel_scatter_fusion/VGG_KITTI_SSD_600x150_00003_2430_360000_iter_360000.caffemodel')
 max_iter = 120000
@@ -21,6 +21,7 @@ iter0 = solver.iter
 while solver.iter < max_iter:
 #  pdb.set_trace()
   solver.step(1)
+  pdb.set_trace()
 #  label1=solver.net.blobs['label1'].data
 #  label2=solver.net.blobs['label2'].data
   data=solver.net.blobs['data'].data

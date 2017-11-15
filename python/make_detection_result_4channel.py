@@ -17,10 +17,10 @@ s_idx = 6000
 f_idx = 7481
 
 base_dir = '/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/'
-txt_dir = (base_dir + 'SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/result_00001_2028_140000_big_stand_aug_realpre/Car/')
+txt_dir = (base_dir + 'SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/result_00001_2028_115000_big_stand_aug_realpre/Pedestrian/')
 caffe.set_mode_gpu()
-caffe.set_device(1)
-net = caffe.Net('/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/deploy.prototxt', '/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/VGG_KITTI_SSD_600x150_00001_2028_360000_realpre_iter_140000.caffemodel', caffe.TEST)
+caffe.set_device(0)
+net = caffe.Net('/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/deploy.prototxt', '/media/user/4b3dfae8-c6b6-4a03-936d-d8fee7ff0b89/SSD/caffe/data/KITTI/depth_gain_test/4channel_sparse_fusion_scaling/VGG_KITTI_SSD_600x150_00001_2028_360000_realpre_iter_115000.caffemodel', caffe.TEST)
 labels = ["background", "Car", "Pedestrian", "Cyclist", "Van", "Truck", "Person_sitting", "Tram", "Misc"]
 if not(os.path.exists(txt_dir)):
   os.makedirs(txt_dir)
@@ -72,7 +72,7 @@ def load_predictions_3channel():
     out = net.forward()
     result_file = open(txt_dir+'%06d.txt'%(data_idx-s_idx),'w')
     for test_idx in range(out['detection_out'].shape[2]):
-      if out['detection_out'][0][0][test_idx][1] == 1:
+      if out['detection_out'][0][0][test_idx][1] == 2:
         test_box = np.zeros((5,),np.float32)
         test_value = copy.deepcopy(out['detection_out'][0][0][test_idx])
         test_box[0] = copy.deepcopy(test_value[2])
@@ -80,7 +80,7 @@ def load_predictions_3channel():
         test_box[2] = max(0,copy.deepcopy(test_value[4] * frame.shape[0]).astype(np.int32))
         test_box[3] = copy.deepcopy(test_value[5] * frame.shape[1]).astype(np.int32)
         test_box[4] = copy.deepcopy(test_value[6] * frame.shape[0]).astype(np.int32)
-        result_file.write("Car -1 -1 -10 %.3f %.3f %.3f %.3f -1 -1 -1 -1000 -1000 -1000 -10 %.8f\n"%(test_box[1],test_box[2],test_box[3],test_box[4],test_box[0]))
+        result_file.write("Pedestrian -1 -1 -10 %.3f %.3f %.3f %.3f -1 -1 -1 -1000 -1000 -1000 -10 %.8f\n"%(test_box[1],test_box[2],test_box[3],test_box[4],test_box[0]))
 #    total_test_box[data_idx] = test_box_set
     print data_idx
   return total_test_box
